@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Consumer } from "../context";
 
 export class Contact extends Component {
   constructor() {
     super();
     this.state = {
-      showContactInfo: true
+      showContactInfo: false
     };
     this.toggleContactInfoVisibility = this.toggleContactInfoVisibility.bind(
       this
@@ -18,8 +19,7 @@ export class Contact extends Component {
       name: PropTypes.string.isRequired,
       email: PropTypes.string,
       phone: PropTypes.string
-    }).isRequired,
-    deleteContact: PropTypes.func.isRequired
+    }).isRequired
   };
 
   toggleContactInfoVisibility() {
@@ -30,35 +30,49 @@ export class Contact extends Component {
     });
   }
 
-  deleteContact() {
-    this.props.deleteContact(this.state.id);
+  /**
+   * Dispatches an action to delete contact from context
+   * @param {number} id
+   * @param {function} dispatch
+   */
+  deleteContact(id, dispatch) {
+    dispatch({ type: "DELETE_CONTACT", payload: id });
   }
 
   render() {
-    const { name, email, phone } = this.props.contact;
+    const { id, name, email, phone } = this.props.contact;
     const { showContactInfo } = this.state;
+
+    let chevronOrientation = showContactInfo ? "up" : "down";
     return (
-      <div className="card card-body mb-3">
-        <h4>
-          {name}{" "}
-          <i
-            onClick={this.toggleContactInfoVisibility}
-            className="fas fa-sort-down"
-            style={{ cursor: "pointer" }}
-          />
-          <i
-            onClick={this.deleteContact}
-            className="fas fa-times float-right"
-            style={{ cursor: "pointer", color: "red" }}
-          />
-        </h4>
-        {showContactInfo && (
-          <ul className="list-group">
-            <li className="list-group-item">{email}</li>
-            <li className="list-group-item">{phone}</li>
-          </ul>
-        )}
-      </div>
+      <Consumer>
+        {value => {
+          const { dispatch } = value;
+          return (
+            <div className="card card-body mb-3">
+              <h4>
+                {name}{" "}
+                <i
+                  onClick={this.toggleContactInfoVisibility}
+                  className={`fas fa-xs fa-chevron-${chevronOrientation}`}
+                  style={{ cursor: "pointer" }}
+                />
+                <i
+                  onClick={() => this.deleteContact(id, dispatch)}
+                  className="fas fa-times float-right"
+                  style={{ cursor: "pointer", color: "red" }}
+                />
+              </h4>
+              {showContactInfo && (
+                <ul className="list-group">
+                  <li className="list-group-item">{email}</li>
+                  <li className="list-group-item">{phone}</li>
+                </ul>
+              )}
+            </div>
+          );
+        }}
+      </Consumer>
     );
   }
 }
