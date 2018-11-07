@@ -15,7 +15,7 @@ export class Contact extends Component {
   }
   static propTypes = {
     contact: PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
       email: PropTypes.string,
       phone: PropTypes.string
