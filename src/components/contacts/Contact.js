@@ -43,6 +43,7 @@ export class Contact extends Component {
     const { id, name, email, phone } = this.props.contact;
     const { showContactInfo } = this.state;
 
+    // Determines whether the chevron icon should be up or down, based on showContactInfo value
     let chevronOrientation = showContactInfo ? "up" : "down";
     return (
       <Consumer>
