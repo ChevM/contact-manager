@@ -46,8 +46,6 @@ export class AddContact extends Component {
     }
     this.setState({ errors });
 
-    console.log(this.state.errors);
-
     if (_.isEmpty(errors)) {
       dispatch({ type: "ADD_CONTACT", payload: newContact });
       // Clear state
