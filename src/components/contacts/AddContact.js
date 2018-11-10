@@ -55,6 +55,8 @@ export class AddContact extends Component {
         phone: "",
         errors: {}
       });
+      // Redirect user to homepage
+      this.props.history.push("/");
     }
   }
 
@@ -66,45 +68,48 @@ export class AddContact extends Component {
         {value => {
           const { dispatch } = value;
           return (
-            <div className="card mb-3">
-              <div className="card-header">Add Contact</div>
-              <div className="card-body">
-                <form onSubmit={e => this.onSubmit(dispatch, e)}>
-                  <TextInputGroup
-                    label="Name"
-                    placeholder="Enter Name..."
-                    name="name"
-                    value={name}
-                    required={false}
-                    onChange={this.onChange}
-                    error={errors.name}
-                    id=""
-                  />
-                  <TextInputGroup
-                    type="email"
-                    label="Email"
-                    placeholder="Enter Email..."
-                    name="email"
-                    value={email}
-                    onChange={this.onChange}
-                    error={errors.email}
-                    id=""
-                  />
-                  <TextInputGroup
-                    label="Phone"
-                    placeholder="Enter Phone..."
-                    name="phone"
-                    value={phone}
-                    onChange={this.onChange}
-                    error={errors.phone}
-                  />
-                  <input
-                    type="submit"
-                    value="Add Contact"
-                    className="btn btn-primary btn-block"
-                  />
-                </form>
+            <div className="col-sm-11 col-md-10 col-lg-9 mx-auto">
+              <div className="display-4 my-3">
+                <span className="text-primary">Add</span> Contact
               </div>
+              <form
+                onSubmit={e => this.onSubmit(dispatch, e)}
+                className="mr-auto"
+              >
+                <TextInputGroup
+                  label="Name"
+                  placeholder="Enter Name..."
+                  name="name"
+                  value={name}
+                  required={false}
+                  onChange={this.onChange}
+                  error={errors.name}
+                  id=""
+                />
+                <TextInputGroup
+                  type="email"
+                  label="Email"
+                  placeholder="Enter Email..."
+                  name="email"
+                  value={email}
+                  onChange={this.onChange}
+                  error={errors.email}
+                  id=""
+                />
+                <TextInputGroup
+                  label="Phone"
+                  placeholder="Enter Phone..."
+                  name="phone"
+                  value={phone}
+                  onChange={this.onChange}
+                  error={errors.phone}
+                />
+                <input
+                  type="submit"
+                  value="Add Contact"
+                  className="btn btn-success btn-block"
+                />
+              </form>
             </div>
           );
         }}
