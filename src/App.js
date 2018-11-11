@@ -12,6 +12,7 @@ import { Provider } from "./context";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import Test from "./components/testComponents/Test";
 
 class App extends Component {
   render() {
@@ -26,6 +27,7 @@ class App extends Component {
                 <Route exact path="/contact/:id" component={AddContact} />
                 <Route exact path="/contact/add" component={AddContact} />
                 <Route exact path="/about" component={About} />
+                <Route exact path="/test" component={Test} />
                 <Route component={NotFound} />
               </Switch>
             </div>
