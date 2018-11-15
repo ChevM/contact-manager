@@ -37,13 +37,18 @@ export class Contact extends Component {
    * @param {number} id
    * @param {function} dispatch
    */
-  onDeleteClick(id, dispatch, e) {
-    e.stopPropagation();
-    axios
-      .delete(`https://jsonplaceholder.typicode.com/users/${id}`)
-      .then(() => {
-        dispatch({ type: "DELETE_CONTACT", payload: id });
-      });
+  async onDeleteClick(id, dispatch, e) {
+    // e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+
+    // Dispatches in finally block instead of try, because the dummy API does not contain IDs > 12
+    try {
+      await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      dispatch({ type: "DELETE_CONTACT", payload: id });
+    }
   }
   onContactInfoClick(e) {
     e.stopPropagation();
@@ -51,42 +56,54 @@ export class Contact extends Component {
 
   render() {
     const { id, name, email, phone } = this.props.contact;
-    const { showContactInfo } = this.state;
 
-    let chevronOrientation = showContactInfo ? "up" : "down";
     return (
       <Consumer>
         {value => {
           const { dispatch } = value;
           return (
-            <div
-              className="card card-body mb-3"
-              onClick={this.toggleContactInfoVisibility}
-              style={{ cursor: "pointer" }}
-            >
-              <h5 className="row justify-content-between">
-                <span className="col-auto">
-                  {name}
+            <div className="card mb-3">
+              <div
+                className="card-header btn btn-light collapsed"
+                onClick={this.toggleContactInfoVisibility}
+                id={`heading${id}`}
+                style={{ cursor: "pointer" }}
+                role="button"
+                data-toggle="collapse"
+                data-target={`#collapse${id}`}
+                aria-expanded="false"
+                aria-controls={`collapse${id}`}
+              >
+                <div className="row justify-content-between">
+                  <h5 className="col-auto">
+                    <span>
+                      {name}
+                      <i
+                        className={`fas fa-xs fa-fw fa-chevron-custom mx-auto`}
+                      />
+                    </span>
+                  </h5>
                   <i
-                    className={`fas fa-xs fa-fw fa-chevron-${chevronOrientation} pl-2 mr-auto`}
+                    onClick={e => this.onDeleteClick(id, dispatch, e)}
+                    className="fas fa-times text-right col-auto"
+                    style={{ cursor: "pointer", color: "red" }}
                   />
-                </span>
-                <i
-                  onClick={e => this.onDeleteClick(id, dispatch, e)}
-                  className="fas fa-times text-right col-auto"
-                  style={{ cursor: "pointer", color: "red" }}
-                />
-              </h5>
-              {showContactInfo && (
-                <ul
-                  className="list-group"
-                  onClick={this.onContactInfoClick}
-                  style={{ cursor: "initial" }}
-                >
-                  <li className="list-group-item">{email}</li>
-                  <li className="list-group-item">{phone}</li>
-                </ul>
-              )}
+                </div>
+              </div>
+              <ul
+                id={`collapse${id}`}
+                className="list-group collapse"
+                data-parent="#accordion"
+              >
+                <li className="list-group-item card-body">
+                  <i class="fas fa-fw fa-envelope" />
+                  <a href={`mailto:${email}`}>{email}</a>
+                </li>
+                <li className="list-group-item card-body">
+                  <i class="fas fa-fw fa-phone" />
+                  <a href={`tel:+${phone}`}>{phone}</a>
+                </li>
+              </ul>
             </div>
           );
         }}
