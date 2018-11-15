@@ -33,6 +33,7 @@ export class Provider extends Component {
     dispatch: action => this.setState(state => reducer(state, action))
   };
 
+  // ! Dummy API does not give unique IDs
   async componentDidMount() {
     try {
       const res = await axios.get("https://jsonplaceholder.typicode.com/users");
