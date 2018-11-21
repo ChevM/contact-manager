@@ -14,9 +14,13 @@ export class Contacts extends Component {
                 <span className="text-primary">Contact</span> List
               </h1>
               <div id="accordion">
-                {contacts.map(contact => (
-                  <Contact key={contact.id} contact={contact} />
-                ))}
+                {contacts
+                  .sort((a, b) =>
+                    a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+                  )
+                  .map(contact => (
+                    <Contact key={contact.id} contact={contact} />
+                  ))}
               </div>
             </div>
           );
